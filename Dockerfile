@@ -8,7 +8,9 @@
 # Contributors:
 #     Eurotech - initial API and implementation
 #-------------------------------------------------------------------------------
-FROM resin/raspberrypi3-node:0.10.22-slim
+ARG BASEIMAGE_BUILD=agileiot/raspberry-pi3-zulujdk:8-jdk-maven
+ARG BASEIMAGE_DEPLOY=agileiot/raspberry-pi3-zulujdk:8-jre
+FROM $BASEIMAGE_DEPLOY
 
 MAINTAINER Matteo Maiero <matteo.maiero@eurotech.com>
 
@@ -17,12 +19,10 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-## Use Oracle Java 8 Embedded
-ENV EJDK=ejdk-8u51-linux-arm-hflt-nocomp-debug
-RUN wget https://s3.amazonaws.com/kura_downloads/virtual_machines/${EJDK}.tar.gz && \
-    tar -zxf ${EJDK}.tar.gz -C /opt && \
-    mv /opt/${EJDK} /opt/jre
-ENV PATH="/opt/jre/bin:${PATH}"
+RUN apt-get update && \
+    apt-get install -y nodejs nodejs-legacy --no-install-recommends && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ENV KURA_VERSION=${KURA_VERSION:-3.0.0}
 ENV RPI_VERSION=${RPI_VERSION:-raspberry-pi-2-3-nn}
