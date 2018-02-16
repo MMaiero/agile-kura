@@ -8,26 +8,26 @@
 # Contributors:
 #     Eurotech - initial API and implementation
 #-------------------------------------------------------------------------------
-FROM resin/raspberrypi3-node:0.10.22-slim
+ARG BASEIMAGE_BUILD=agileiot/raspberry-pi3-zulujdk:8-jdk-maven
+ARG BASEIMAGE_DEPLOY=agileiot/raspberry-pi3-zulujdk:8-jre
+FROM $BASEIMAGE_DEPLOY
 
 MAINTAINER Matteo Maiero <matteo.maiero@eurotech.com>
 
 RUN apt-get update && \
-    apt-get install -y apt-utils unzip ethtool dos2unix telnet bind9 hostapd isc-dhcp-server iw wget --no-install-recommends && \
+    apt-get install -y apt-utils unzip ethtool dos2unix telnet bind9 hostapd isc-dhcp-server bluez-hcidump iw wget --no-install-recommends && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-## Use Oracle Java 8 Embedded
-ENV EJDK=ejdk-8u51-linux-arm-hflt-nocomp-debug
-RUN wget https://s3.amazonaws.com/kura_downloads/virtual_machines/${EJDK}.tar.gz && \
-    tar -zxf ${EJDK}.tar.gz -C /opt && \
-    mv /opt/${EJDK} /opt/jre
-ENV PATH="/opt/jre/bin:${PATH}"
+RUN apt-get update && \
+    apt-get install -y nodejs nodejs-legacy --no-install-recommends && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-ENV KURA_VERSION=${KURA_VERSION:-3.0.0}
-ENV RPI_VERSION=${RPI_VERSION:-raspberry-pi-2-3-nn}
+ENV KURA_VERSION=${KURA_VERSION:-3.1.0}
+ENV RPI_VERSION=${RPI_VERSION:-raspberry-pi-bplus-nn}
 
-## Kura installation http://hudson.eclipse.org/kura/job/kura-develop/lastSuccessfulBuild/artifact/kura/distrib/target/kura_3.0.0-SNAPSHOT_raspberry-pi-2-3_installer.deb
+## Kura installation http://hudson.eclipse.org/kura/job/kura-develop/lastSuccessfulBuild/artifact/kura/distrib/target/kura_3.1.0-SNAPSHOT_raspberry-pi-bplus-nn_installer.deb
 RUN wget http://mirrors.nic.cz/eclipse/kura/releases/${KURA_VERSION}/kura_${KURA_VERSION}_${RPI_VERSION}_installer.deb && \
     dpkg -i --ignore-depends=java8-runtime-headless,java8-runtime kura_${KURA_VERSION}_${RPI_VERSION}_installer.deb && \
     rm kura_${KURA_VERSION}_${RPI_VERSION}_installer.deb
