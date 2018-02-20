@@ -1,0 +1,40 @@
+#-------------------------------------------------------------------------------
+# Copyright (C) 2018 Eurotech and/or its affiliates
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+# 
+# Contributors:
+#     Eurotech
+#-------------------------------------------------------------------------------
+language: java
+
+sudo: required
+
+services:
+  - docker
+
+jdk:
+  - oraclejdk8
+
+env:
+  global:
+    - COMPONENT=agile-kura
+    - DOCKER_CACHE_FILE=/home/travis/docker-cache/cache.tar.gz
+  matrix:
+    - DOCKER_IMAGE=agileiot/$COMPONENT-armv7l
+
+before_install:
+  - source <(curl -s https://raw.githubusercontent.com/Agile-IoT/agile-ci-scripts/master/agile-ci-functions.sh)
+  - docker_upgrade
+  - cache_load
+  - bootstrap
+  - echo "Tagging the build with tag - $DOCKER_TAG"
+  
+script:
+  - docker_build_if_needed
+  - cache_save
+
+after_success:
+  - versionist_if_needed
