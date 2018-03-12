@@ -9,8 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "http-proxy": "^1.16.2",
     "eventemitter3": "^1.2.0",
+    "http-proxy": "^1.16.2",
+    "npm": "^5.7.1",
     "requires-port": "^1.0.0"
   }
 }
