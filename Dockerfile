@@ -24,7 +24,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-ENV KURA_VERSION=${KURA_VERSION:-3.1.0}
+ENV KURA_VERSION=${KURA_VERSION:-3.1.1}
 ENV RPI_VERSION=${RPI_VERSION:-raspberry-pi-bplus-nn}
 
 ## Kura installation http://hudson.eclipse.org/kura/job/kura-develop/lastSuccessfulBuild/artifact/kura/distrib/target/kura_3.1.0-SNAPSHOT_raspberry-pi-bplus-nn_installer.deb
